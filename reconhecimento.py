@@ -2,8 +2,6 @@ import cv2 #type: ignore
 import numpy as np
 from dataclasses import dataclass
 
-import movimento
-
 blank = np.zeros((400,400))
 
 def nada (x): pass
