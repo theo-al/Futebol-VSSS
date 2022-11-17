@@ -41,7 +41,8 @@ if time == 0:
     cor_aliado = azul ; cor_oponente = amarelo
 
 vet = np.array([0,2])
-pos_vet = largura_tela, altura_tela
+x_vet, y_vet = largura_tela//2, altura_tela//2
+cont = 0 
 
 while True: # Loop de repetição para ret e frame do vídeo
     ret, frame = cap.read() # alterar "tela" para "frame" e utilizar a linha de baixo caso necessário diminuir a resolução da imagem
@@ -49,6 +50,14 @@ while True: # Loop de repetição para ret e frame do vídeo
     # Extrair a região de interesse:
     '''roi = frame[x:x+?,y:y+?] # neste caso foi utilizada toda a imagem, mas pode ser alterado'''
     
+    cont += 1
+    #if not (cont % 20): 
+    if True : 
+        vet = np.dot(matriz_correção, vet)
+
+    linha_desenhar = (y_vet, y_vet+int(vet[1])), (x_vet, x_vet+int(vet[0]))
+    tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)
+
     #1 Detecção dos jogadores e bola
     hsv = cv2.cvtColor(tela, cv2.COLOR_BGR2HSV) # A cores em HSV funcionam baseadas em hue, no caso do opencv, varia de 0 a 180º (diferente do padrão de 360º)
 
