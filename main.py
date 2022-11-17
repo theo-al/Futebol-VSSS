@@ -36,8 +36,12 @@ print(matriz_correção)
 
 # cor dos times
 time = 0 # 0 para time azul, 1 para time amarelo
+
 if time == 0:
     cor_aliado = azul ; cor_oponente = amarelo
+
+vet = np.array([0,2])
+pos_vet = largura_tela, altura_tela
 
 while True: # Loop de repetição para ret e frame do vídeo
     ret, frame = cap.read() # alterar "tela" para "frame" e utilizar a linha de baixo caso necessário diminuir a resolução da imagem
@@ -90,7 +94,11 @@ while True: # Loop de repetição para ret e frame do vídeo
                     vetor_dir = np.dot(matriz_correção, vetor_normalizado)
                     print(f"vetor girado: {vetor_dir}")
 
-                    linha_desenhar = ((yID,int(vetor_dir[1])+yID), (xID,int(vetor_dir[0])+xID))
+                    centro_ret = centro(x, y, w, h) 
+                    print(f"coordenadas ret: {centro_ret}")
+
+                    x_novo, y_novo = (vetor_dir+centro_ret[0], vetor_dir+centro_ret[1])
+                    linha_desenhar = (int(y_novo[0]), int(y_novo[1])), (int(x_novo[0]), int(x_novo[1]))
                     print(f"linha na tela: {linha_desenhar}\n")
 
                     tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)
