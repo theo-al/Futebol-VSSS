@@ -26,11 +26,11 @@ while not (seno_angulo_vetor <= 1) : seno_angulo_vetor -=1 # deixa entre -1 e 1 
 while not (seno_angulo_vetor >=-1) : seno_angulo_vetor +=1
 
 angulo_vetor = pi/2 - asin(seno_angulo_vetor) #olhar isso do domínio
-# matriz_correção = np.array([
-                        # [cos(angulo_vetor), -sin(angulo_vetor)],
-                        # [sin(angulo_vetor),  cos(angulo_vetor)]
-                        # ])
-matriz_correção = np.array([[0,1], [-1,0]]) #90º
+matriz_correção = np.array([
+                           [cos(angulo_vetor), -sin(angulo_vetor)],
+                           [sin(angulo_vetor),  cos(angulo_vetor)]
+                           ])
+# matriz_correção = np.array([[0,1], [-1,0]]) #90º
 
 print(matriz_correção)
 
@@ -99,7 +99,7 @@ while True: # Loop de repetição para ret e frame do vídeo
                     print(f"linha normal {linha_dir}")
 
                     vetor_normalizado = np.subtract(linha_dir[:2], linha_dir[2:])
-                    print(f"vetor no zero : {vetor_normalizado}")
+                    print(f"vetor no zero: {vetor_normalizado}")
 
                     vetor_dir = np.dot(matriz_correção, vetor_normalizado)
                     print(f"vetor girado: {vetor_dir}")
@@ -107,8 +107,8 @@ while True: # Loop de repetição para ret e frame do vídeo
                     centro_ret = centro(x, y, w, h) 
                     print(f"coordenadas ret: {centro_ret}")
 
-                    x_novo, y_novo = (vetor_dir+centro_ret[0], vetor_dir+centro_ret[1])
-                    linha_desenhar = (int(y_novo[0]), int(y_novo[1])), (int(x_novo[0]), int(x_novo[1]))
+                    inicial, final = (centro_ret, vetor_dir+centro_ret)
+                    linha_desenhar = (int(inicial[0]), int(inicial[1])), (int(final[0]), int(final[1]))
                     print(f"linha na tela: {linha_desenhar}\n")
 
                     tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)
