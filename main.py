@@ -1,8 +1,6 @@
 import cv2 
 import numpy as np
 
-from math import pi, cos, sin, atan # pra girar o vetor
-
 from reconhecimento import * #ver de usar o nome completo nesse, deixei assim só pra não ter que mexer
 from constantes import *
 
@@ -16,30 +14,11 @@ fonte = cv2.FONT_HERSHEY_SIMPLEX
 largura_tela = int(cap.get(3))
 altura_tela  = int(cap.get(4))
 
-#vetor e dimensões do robô (mm)
-altura_robo = 74 #altura do retangulo maior
-altura_id   = 27 #altura do retângulo menor
-distancia_centros = 22 #largura da fita
-
-    #acha matriz de rotação
-angulo_vetor = atan((altura_robo/2 - altura_id/2)/distancia_centros)
-# angulo_girar = -angulo_vetor
-angulo_girar = pi/2 + angulo_vetor
-
-matriz_correção = np.array([[cos(angulo_girar), -sin(angulo_girar)],
-                            [sin(angulo_girar),  cos(angulo_girar)]])
-# matriz_correção = np.array([[0,1], [-1,0]]) #90º
-print(matriz_correção)
-
 # cor dos times
 time = 0 # 0 para time azul, 1 para time amarelo
 
 if time == 0:
     cor_aliado = azul ; cor_oponente = amarelo
-
-vet = np.array([0,40])
-pos_vet = int(largura_tela//2), int(altura_tela//2)
-cont = 0
 
 while True: # Loop de repetição para ret e frame do vídeo
     ret, frame = cap.read() # alterar "tela" para "frame" e utilizar a linha de baixo caso necessário diminuir a resolução da imagem
@@ -47,13 +26,6 @@ while True: # Loop de repetição para ret e frame do vídeo
     # Extrair a região de interesse:
     '''roi = frame[x:x+?,y:y+?] # neste caso foi utilizada toda a imagem, mas pode ser alterado'''
     
-    #vetor posicionado de teste
-    cont += 1
-    if not (cont % 13): vet = np.dot(matriz_correção, vet)
-
-    linha_desenhar = (pos_vet, (pos_vet+vet).astype(int))
-    tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)
-
     #1 Detecção dos jogadores e bola
     hsv = cv2.cvtColor(tela, cv2.COLOR_BGR2HSV) # A cores em HSV funcionam baseadas em hue, no caso do opencv, varia de 0 a 180º (diferente do padrão de 360º)
 
