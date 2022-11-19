@@ -26,10 +26,11 @@ while not (seno_angulo_vetor <= 1) : seno_angulo_vetor -=1 # deixa entre -1 e 1 
 while not (seno_angulo_vetor >=-1) : seno_angulo_vetor +=1
 
 angulo_vetor = pi/2 - asin(seno_angulo_vetor) #olhar isso do domínio
-matriz_correção = array([
-                        [cos(angulo_vetor), -sin(angulo_vetor)],
-                        [sin(angulo_vetor),  cos(angulo_vetor)]
-                        ])
+# matriz_correção = np.array([
+                        # [cos(angulo_vetor), -sin(angulo_vetor)],
+                        # [sin(angulo_vetor),  cos(angulo_vetor)]
+                        # ])
+matriz_correção = np.array([[0,1], [-1,0]]) #90º
 
 print(matriz_correção)
 
@@ -40,9 +41,9 @@ time = 0 # 0 para time azul, 1 para time amarelo
 if time == 0:
     cor_aliado = azul ; cor_oponente = amarelo
 
-vet = np.array([0,2])
+vet = np.array([0,40])
 x_vet, y_vet = largura_tela//2, altura_tela//2
-cont = 0 
+cont = 0
 
 while True: # Loop de repetição para ret e frame do vídeo
     ret, frame = cap.read() # alterar "tela" para "frame" e utilizar a linha de baixo caso necessário diminuir a resolução da imagem
@@ -55,7 +56,7 @@ while True: # Loop de repetição para ret e frame do vídeo
     if True : 
         vet = np.dot(matriz_correção, vet)
 
-    linha_desenhar = (y_vet, y_vet+int(vet[1])), (x_vet, x_vet+int(vet[0]))
+    linha_desenhar = (y_vet, x_vet),(y_vet+int(vet[1]), x_vet+int(vet[0]))
     tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)
 
     #1 Detecção dos jogadores e bola
