@@ -1,6 +1,8 @@
 import cv2 
 import numpy as np
 
+from math import pi, cos, sin, atan # pra girar o vetor
+
 from reconhecimento import * #ver de usar o nome completo nesse, deixei assim só pra não ter que mexer
 from constantes import *
 
@@ -19,21 +21,15 @@ altura_robo = 74 #altura do retangulo maior
 altura_id   = 27 #altura do retângulo menor
 distancia_centros = 22 #largura da fita
 
-    #acha matriz de rotação #(teria como fazer menos conta aqui, mas como é só uma vez...)
-seno_angulo_vetor = (altura_robo/2 - altura_id/2)/distancia_centros
+    #acha matriz de rotação
+angulo_vetor = atan((altura_robo/2 - altura_id/2)/distancia_centros)
+# angulo_girar = -angulo_vetor
+angulo_girar = pi/2 + angulo_vetor
 
-while not (seno_angulo_vetor <= 1) : seno_angulo_vetor -=1 # deixa entre -1 e 1 #(mudar)
-while not (seno_angulo_vetor >=-1) : seno_angulo_vetor +=1
-
-angulo_vetor = pi/2 - asin(seno_angulo_vetor) #olhar isso do domínio
-matriz_correção = np.array([
-                           [cos(angulo_vetor), -sin(angulo_vetor)],
-                           [sin(angulo_vetor),  cos(angulo_vetor)]
-                           ])
+matriz_correção = np.array([[cos(angulo_girar), -sin(angulo_girar)],
+                            [sin(angulo_girar),  cos(angulo_girar)]])
 # matriz_correção = np.array([[0,1], [-1,0]]) #90º
-
 print(matriz_correção)
-
 
 # cor dos times
 time = 0 # 0 para time azul, 1 para time amarelo
@@ -42,7 +38,7 @@ if time == 0:
     cor_aliado = azul ; cor_oponente = amarelo
 
 vet = np.array([0,40])
-x_vet, y_vet = largura_tela//2, altura_tela//2
+pos_vet = int(largura_tela//2), int(altura_tela//2)
 cont = 0
 
 while True: # Loop de repetição para ret e frame do vídeo
@@ -51,12 +47,11 @@ while True: # Loop de repetição para ret e frame do vídeo
     # Extrair a região de interesse:
     '''roi = frame[x:x+?,y:y+?] # neste caso foi utilizada toda a imagem, mas pode ser alterado'''
     
+    #vetor posicionado de teste
     cont += 1
-    #if not (cont % 20): 
-    if True : 
-        vet = np.dot(matriz_correção, vet)
+    if not (cont % 13): vet = np.dot(matriz_correção, vet)
 
-    linha_desenhar = (y_vet, x_vet),(y_vet+int(vet[1]), x_vet+int(vet[0]))
+    linha_desenhar = (pos_vet, (pos_vet+vet).astype(int))
     tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)
 
     #1 Detecção dos jogadores e bola
@@ -107,8 +102,8 @@ while True: # Loop de repetição para ret e frame do vídeo
                     centro_ret = centro(x, y, w, h) 
                     print(f"coordenadas ret: {centro_ret}")
 
-                    inicial, final = (centro_ret, vetor_dir+centro_ret)
-                    linha_desenhar = (int(inicial[0]), int(inicial[1])), (int(final[0]), int(final[1]))
+                    inicial, final = (centro_ret, (vetor_dir+centro_ret).astype(int))
+                    linha_desenhar = (inicial, final)
                     print(f"linha na tela: {linha_desenhar}\n")
 
                     tela = cv2.arrowedLine(tela, *linha_desenhar, (240,100,0),5)

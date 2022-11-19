@@ -1,5 +1,4 @@
 from numpy import ndarray, array
-from math import pi, cos, sin, asin # pra girar o vetor
 
 from dataclasses import dataclass
 
