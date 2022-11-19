@@ -1,7 +1,7 @@
 from numpy import ndarray, array
+from math import pi, cos, sin, atan # pra girar o vetor
 
 from dataclasses import dataclass
-from math import pi, cos, sin, atan # pra girar o vetor
 
 
 @dataclass(slots=True)
